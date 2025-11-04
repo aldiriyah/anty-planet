@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download - BrowserBot Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #a0aec0;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* OS Tabs */
+        .os-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .os-tab {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-width: 140px;
+        }
+
+        .os-tab:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .os-tab.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .os-icon {
+            font-size: 42px;
+        }
+
+        .os-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Download Section */
+        .download-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .download-content {
+            display: none;
+        }
+
+        .download-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .download-icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+
+        .download-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .download-subtitle {
+            font-size: 16px;
+            color: #a0aec0;
+            margin-bottom: 35px;
+        }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 50px;
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+        }
+
+        .download-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .download-info {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+
+        .requirements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .requirement-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .requirement-text {
+            flex: 1;
+        }
+
+        .requirement-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .requirement-value {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        /* License Note */
+        .license-note {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .license-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .license-icon {
+            font-size: 32px;
+        }
+
+        .license-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .license-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .license-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .license-item-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .license-item-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .license-item-desc {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        /* Changelog */
+        .changelog-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .changelog-header {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+
+        .changelog-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .changelog-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .changelog-icon {
+            font-size: 28px;
+        }
+
+        .changelog-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .changelog-arrow {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+
+        .changelog-section.open .changelog-arrow {
+            transform: rotate(180deg);
+        }
+
+        .changelog-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .changelog-section.open .changelog-content {
+            max-height: 2000px;
+        }
+
+        .changelog-inner {
+            padding: 30px;
+        }
+
+        .changelog-version {
+            margin-bottom: 35px;
+        }
+
+        .changelog-version:last-child {
+            margin-bottom: 0;
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .version-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .version-date {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
+        .version-badge {
+            background: rgba(39, 201, 63, 0.2);
+            color: #27c93f;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .changelog-list {
+            list-style: none;
+        }
+
+        .changelog-item {
+            padding: 12px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .changelog-type {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .type-new {
+            background: rgba(39, 201, 63, 0.2);
+            color: #27c93f;
+        }
+
+        .type-improved {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .type-fixed {
+            background: rgba(255, 189, 46, 0.2);
+            color: #ffbd2e;
+        }
+
+        .changelog-text {
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Additional Downloads */
+        .additional-downloads {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .additional-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #a0aec0;
+        }
+
+        .additional-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .additional-link {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 25px;
+            border-radius: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .additional-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .download-section {
+                padding: 30px 20px;
+            }
+
+            .os-tabs {
+                gap: 10px;
+            }
+
+            .os-tab {
+                padding: 15px 25px;
+                min-width: 110px;
+            }
+
+            .os-icon {
+                font-size: 32px;
+            }
+
+            .download-button {
+                padding: 16px 35px;
+                font-size: 16px;
+            }
+
+            .requirements {
+                grid-template-columns: 1fr;
+            }
+
+            .license-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>Download BrowserBot Pro</h1>
+            <p>Get started with the most powerful browser automation tool</p>
+            <div class="version-badge">Latest Version: v3.5.2</div>
+        </div>
+
+        <!-- OS Tabs -->
+        <div class="os-tabs">
+            <div class="os-tab active" data-os="windows" onclick="switchOS('windows')">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows</div>
+            </div>
+            <div class="os-tab" data-os="mac" onclick="switchOS('mac')">
+                <div class="os-icon">🍎</div>
+                <div class="os-name">macOS</div>
+            </div>
+            <div class="os-tab" data-os="linux" onclick="switchOS('linux')">
+                <div class="os-icon">🐧</div>
+                <div class="os-name">Linux</div>
+            </div>
+        </div>
+
+        <!-- Download Section - Windows -->
+        <div class="download-section">
+            <div class="download-content active" id="windows-content">
+                <div class="download-icon">🪟</div>
+                <h2 class="download-title">BrowserBot Pro for Windows</h2>
+                <p class="download-subtitle">Compatible with Windows 10 and 11 (64-bit)</p>
+                
+                <a href="#" class="download-button" onclick="startDownload('Windows')">
+                    <span>⬇️</span>
+                    <span>Download for Windows</span>
+                </a>
+                
+                <div class="download-info">
+                    Version 3.5.2 • 125 MB • Released Nov 1, 2025
+                </div>
+
+                <div class="requirements">
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💻</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Processor</div>
+                            <div class="requirement-value">Intel Core i5 or equivalent</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🧠</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Memory</div>
+                            <div class="requirement-value">8 GB RAM minimum</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💾</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Storage</div>
+                            <div class="requirement-value">500 MB available space</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🌐</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Network</div>
+                            <div class="requirement-value">Internet connection required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Section - macOS -->
+            <div class="download-content" id="mac-content">
+                <div class="download-icon">🍎</div>
+                <h2 class="download-title">BrowserBot Pro for macOS</h2>
+                <p class="download-subtitle">Compatible with macOS 11 Big Sur and later</p>
+                
+                <a href="#" class="download-button" onclick="startDownload('macOS')">
+                    <span>⬇️</span>
+                    <span>Download for macOS</span>
+                </a>
+                
+                <div class="download-info">
+                    Version 3.5.2 • 138 MB • Released Nov 1, 2025
+                </div>
+
+                <div class="requirements">
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💻</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Processor</div>
+                            <div class="requirement-value">Intel or Apple Silicon</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🧠</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Memory</div>
+                            <div class="requirement-value">8 GB RAM minimum</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💾</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Storage</div>
+                            <div class="requirement-value">500 MB available space</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🌐</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Network</div>
+                            <div class="requirement-value">Internet connection required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Section - Linux -->
+            <div class="download-content" id="linux-content">
+                <div class="download-icon">🐧</div>
+                <h2 class="download-title">BrowserBot Pro for Linux</h2>
+                <p class="download-subtitle">Compatible with Ubuntu 20.04+, Debian 10+, Fedora 33+</p>
+                
+                <a href="#" class="download-button" onclick="startDownload('Linux')">
+                    <span>⬇️</span>
+                    <span>Download for Linux</span>
+                </a>
+                
+                <div class="download-info">
+                    Version 3.5.2 • 118 MB • Released Nov 1, 2025
+                </div>
+
+                <div class="requirements">
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💻</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Processor</div>
+                            <div class="requirement-value">64-bit x86 or ARM</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🧠</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Memory</div>
+                            <div class="requirement-value">8 GB RAM minimum</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💾</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Storage</div>
+                            <div class="requirement-value">500 MB available space</div>
+                        </div>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🌐</div>
+                        <div class="requirement-text">
+                            <div class="requirement-label">Network</div>
+                            <div class="requirement-value">Internet connection required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- License Note -->
+        <div class="license-note">
+            <div class="license-header">
+                <div class="license-icon">🔑</div>
+                <h3 class="license-title">License & Device Usage</h3>
+            </div>
+            <div class="license-grid">
+                <div class="license-item">
+                    <div class="license-item-title">Devices Per License</div>
+                    <div class="license-item-value">Up to 5</div>
+                    <div class="license-item-desc">Use on multiple computers with one license</div>
+                </div>
+                <div class="license-item">
+                    <div class="license-item-title">Concurrent Sessions</div>
+                    <div class="license-item-value">Unlimited</div>
+                    <div class="license-item-desc">Run as many instances as your hardware allows</div>
+                </div>
+                <div class="license-item">
+                    <div class="license-item-title">License Transfer</div>
+                    <div class="license-item-value">Anytime</div>
+                    <div class="license-item-desc">Deactivate on one device and activate on another</div>
+                </div>
+                <div class="license-item">
+                    <div class="license-item-title">Updates Included</div>
+                    <div class="license-item-value">Lifetime</div>
+                    <div class="license-item-desc">All future updates at no extra cost</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Changelog -->
+        <div class="changelog-section" id="changelog">
+            <div class="changelog-header" onclick="toggleChangelog()">
+                <div class="changelog-header-left">
+                    <div class="changelog-icon">📋</div>
+                    <h3 class="changelog-title">What's New - Changelog</h3>
+                </div>
+                <div class="changelog-arrow">▼</div>
+            </div>
+            <div class="changelog-content">
+                <div class="changelog-inner">
+                    <!-- Version 3.5.2 -->
+                    <div class="changelog-version">
+                        <div class="version-header">
+                            <div class="version-number">v3.5.2</div>
+                            <div class="version-date">November 1, 2025</div>
+                            <div class="version-badge">Latest</div>
+                        </div>
+                        <ul class="changelog-list">
+                            <li class="changelog-item">
+                                <span class="changelog-type type-new">New</span>
+                                <span class="changelog-text">Added AI-powered element detection for improved reliability</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-new">New</span>
+                                <span class="changelog-text">Introduced dark mode for the UI dashboard</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Enhanced multi-threading performance - up to 40% faster</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Better memory management for long-running automations</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Resolved issue with proxy rotation on certain configurations</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Fixed crash when handling very large CSV files</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Version 3.5.1 -->
+                    <div class="changelog-version">
+                        <div class="version-header">
+                            <div class="version-number">v3.5.1</div>
+                            <div class="version-date">October 15, 2025</div>
+                        </div>
+                        <ul class="changelog-list">
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Stealth mode now bypasses more advanced detection systems</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Reduced CPU usage during idle periods by 60%</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Fixed authentication issues with certain Web3 wallets</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Corrected timezone handling in scheduled tasks</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Version 3.5.0 -->
+                    <div class="changelog-version">
+                        <div class="version-header">
+                            <div class="version-number">v3.5.0</div>
+                            <div class="version-date">September 28, 2025</div>
+                        </div>
+                        <ul class="changelog-list">
+                            <li class="changelog-item">
+                                <span class="changelog-type type-new">New</span>
+                                <span class="changelog-text">Major UI overhaul with improved user experience</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-new">New</span>
+                                <span class="changelog-text">Added support for custom Chrome extensions</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-new">New</span>
+                                <span class="changelog-text">Introduced workflow templates for common use cases</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Faster startup time - now launches 3x quicker</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Multiple bug fixes and stability improvements</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Version 3.4.8 -->
+                    <div class="changelog-version">
+                        <div class="version-header">
+                            <div class="version-number">v3.4.8</div>
+                            <div class="version-date">September 10, 2025</div>
+                        </div>
+                        <ul class="changelog-list">
+                            <li class="changelog-item">
+                                <span class="changelog-type type-improved">Improved</span>
+                                <span class="changelog-text">Enhanced error reporting with detailed logs</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Resolved memory leak in profile management</span>
+                            </li>
+                            <li class="changelog-item">
+                                <span class="changelog-type type-fixed">Fixed</span>
+                                <span class="changelog-text">Fixed issue with screenshots not saving properly</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Downloads -->
+        <div class="additional-downloads">
+            <h3 class="additional-title">Looking for something else?</h3>
+            <div class="additional-links">
+                <a href="#" class="additional-link">
+                    <span>📦</span>
+                    <span>Portable Version</span>
+                </a>
+                <a href="#" class="additional-link">
+                    <span>🔧</span>
+                    <span>Chrome Extension</span>
+                </a>
+                <a href="#" class="additional-link">
+                    <span>📱</span>
+                    <span>Mobile Companion</span>
+                </a>
+                <a href="#" class="additional-link">
+                    <span>📚</span>
+                    <span>Documentation</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-detect OS
+        function detectOS() {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            if (userAgent.indexOf('win') !== -1) return 'windows';
+            if (userAgent.indexOf('mac') !== -1) return 'mac';
+            if (userAgent.indexOf('linux') !== -1) return 'linux';
+            return 'windows'; // default
+        }
+
+        // Switch OS Tab
+        function switchOS(os) {
+            // Update tabs
+            document.querySelectorAll('.os-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-os="${os}"]`).classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.download-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${os}-content`).classList.add('active');
+        }
+
+        // Toggle Changelog
+        function toggleChangelog() {
+            const changelog = document.getElementById('changelog');
+            changelog.classList.toggle('open');
+        }
+
+        // Start Download
+        function startDownload(os) {
+            alert(`Starting download for ${os}...\n\nVersion: 3.5.2\nYour download will begin shortly.\n\nThank you for choosing BrowserBot Pro!`);
+            // In a real application, this would trigger the actual download
+            return false;
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const detectedOS = detectOS();
+            switchOS(detectedOS);
+        });
+
+        // Additional link handlers
+        document.querySelectorAll('.additional-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const linkText = link.textContent.trim();
+                alert(`Redirecting to ${linkText}...\n\nThis would typically open the relevant page or start the download.`);
+            });
+        });
+    </script>
+</body>
+</html>

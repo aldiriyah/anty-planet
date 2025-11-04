@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            padding: 0 1.5rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(102, 126, 234, 0.1);
+            border-left-color: #667eea;
+        }
+
+        .nav-item.logout {
+            color: #e74c3c;
+            margin-top: 2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .widget h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .widget-content {
+            color: #555;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* Alerts */
+        .alert {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-due {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-open {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-closed {
+            background: #d6d8db;
+            color: #383d41;
+        }
+
+        /* Download Cards */
+        .download-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .download-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .os-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .version {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .device-usage {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .support-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .support-link {
+            flex: 1;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .support-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .widgets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">🧾 VPN Dashboard</div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</li>
+                <li class="nav-item" onclick="showPage('subscription')">💳 Manage Subscription</li>
+                <li class="nav-item" onclick="showPage('billing')">🧾 Billing & Invoices</li>
+                <li class="nav-item" onclick="showPage('downloads')">⬇️ Downloads</li>
+                <li class="nav-item" onclick="showPage('account')">👤 Account & Security</li>
+                <li class="nav-item" onclick="showPage('support')">💬 Support</li>
+                <li class="nav-item logout">🚪 Logout</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div class="page active" id="dashboard">
+                <div class="page-header">
+                    <h1>Welcome Back, John!</h1>
+                    <p>Here's your account overview</p>
+                </div>
+
+                <div class="widgets-grid">
+                    <div class="widget">
+                        <h3>📋 Subscription Status</h3>
+                        <div class="widget-content">
+                            <div class="plan-badge">Premium Plan</div>
+                            <div class="stat-row">
+                                <span>Expires:</span>
+                                <strong>Dec 31, 2025</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Status:</span>
+                                <strong style="color: #28a745;">Active</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <h3>📊 Usage Stats</h3>
+                        <div class="widget-content">
+                            <div class="stat-row">
+                                <span>Profiles Used:</span>
+                                <strong>3 / 5</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Devices Used:</span>
+                                <strong>2 / 5</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Data Usage:</span>
+                                <strong>Unlimited</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <h3>⚡ Quick Actions</h3>
+                        <div class="widget-content">
+                            <button class="btn">Download VPN Client</button>
+                            <button class="btn btn-secondary">View Invoices</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert success">
+                    ✅ Your subscription has been successfully renewed for another month!
+                </div>
+
+                <div class="alert">
+                    ⚠️ You have 2 unused device slots. Add more devices to maximize your plan!
+                </div>
+            </div>
+
+            <!-- Subscription Management Page -->
+            <div class="page" id="subscription">
+                <div class="page-header">
+                    <h1>Manage Subscription</h1>
+                    <p>Upgrade, downgrade, or modify your plan</p>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Current Plan</h3>
+                    <div class="stat-row">
+                        <span>Plan Name:</span>
+                        <strong>Premium Plan</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Price:</span>
+                        <strong>$19.99 / month</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Profiles:</span>
+                        <strong>5 Concurrent</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Devices:</span>
+                        <strong>5 Devices</strong>
+                    </div>
+                    <div class="checkbox-group" style="margin-top: 1rem;">
+                        <input type="checkbox" id="autorenew" checked>
+                        <label for="autorenew">Enable Auto-Renewal</label>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Available Plans</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Price</th>
+                                <th>Profiles</th>
+                                <th>Devices</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Basic</td>
+                                <td>$9.99/mo</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td><button class="btn btn-small">Downgrade</button></td>
+                            </tr>
+                            <tr style="background: #f0f4ff;">
+                                <td><strong>Premium (Current)</strong></td>
+                                <td>$19.99/mo</td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td><span style="color: #28a745; font-weight: 600;">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Enterprise</td>
+                                <td>$39.99/mo</td>
+                                <td>10</td>
+                                <td>10</td>
+                                <td><button class="btn btn-small">Upgrade</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Payment Methods</h3>
+                    <div class="form-group">
+                        <label>Select Payment Method</label>
+                        <select>
+                            <option>Credit/Debit Card</option>
+                            <option>PayPal</option>
+                            <option>Bitcoin (BTC)</option>
+                            <option>Ethereum (ETH)</option>
+                            <option>USDT</option>
+                        </select>
+                    </div>
+                    <button class="btn">Update Payment Method</button>
+                </div>
+            </div>
+
+            <!-- Billing & Payments Page -->
+            <div class="page" id="billing">
+                <div class="page-header">
+                    <h1>Billing & Invoices</h1>
+                    <p>View your payment history and download invoices</p>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Payment History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#INV-2025-001</td>
+                                <td>Oct 01, 2025</td>
+                                <td>$19.99</td>
+                                <td><span class="status-badge status-paid">Paid</span></td>
+                                <td><button class="btn btn-small">Download PDF</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-002</td>
+                                <td>Sep 01, 2025</td>
+                                <td>$19.99</td>
+                                <td><span class="status-badge status-paid">Paid</span></td>
+                                <td><button class="btn btn-small">Download PDF</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-003</td>
+                                <td>Aug 01, 2025</td>
+                                <td>$19.99</td>
+                                <td><span class="status-badge status-paid">Paid</span></td>
+                                <td><button class="btn btn-small">Download PDF</button></td>
+                            </tr>
+                            <tr>
+                                <td>#INV-2025-004</td>
+                                <td>Nov 01, 2025</td>
+                                <td>$19.99</td>
+                                <td><span class="status-badge status-due">Due</span></td>
+                                <td><button class="btn btn-small">Pay Now</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Downloads Page -->
+            <div class="page" id="downloads">
+                <div class="page-header">
+                    <h1>Downloads Center</h1>
+                    <p>Download VPN clients for your devices</p>
+                </div>
+
+                <div class="download-cards">
+                    <div class="download-card">
+                        <div class="os-icon">🪟</div>
+                        <h3>Windows</h3>
+                        <p class="version">Version 2.4.1</p>
+                        <div class="device-usage">Devices: 1 / 5</div>
+                        <button class="btn">Download</button>
+                        <button class="btn btn-secondary" style="margin-top: 0.5rem;">View Changelog</button>
+                        <button class="btn btn-danger btn-small" style="margin-top: 0.5rem;">Revoke Device</button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">🍎</div>
+                        <h3>macOS</h3>
+                        <p class="version">Version 2.4.1</p>
+                        <div class="device-usage">Devices: 0 / 5</div>
+                        <button class="btn">Download</button>
+                        <button class="btn btn-secondary" style="margin-top: 0.5rem;">View Changelog</button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">🤖</div>
+                        <h3>Android</h3>
+                        <p class="version">Version 2.3.8</p>
+                        <div class="device-usage">Devices: 1 / 5</div>
+                        <button class="btn">Download APK</button>
+                        <button class="btn btn-secondary" style="margin-top: 0.5rem;">View Changelog</button>
+                        <button class="btn btn-danger btn-small" style="margin-top: 0.5rem;">Revoke Device</button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">📱</div>
+                        <h3>iOS</h3>
+                        <p class="version">Version 2.3.8</p>
+                        <div class="device-usage">Devices: 0 / 5</div>
+                        <button class="btn">Download</button>
+                        <button class="btn btn-secondary" style="margin-top: 0.5rem;">View Changelog</button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">🐧</div>
+                        <h3>Linux</h3>
+                        <p class="version">Version 2.4.0</p>
+                        <div class="device-usage">Devices: 0 / 5</div>
+                        <button class="btn">Download</button>
+                        <button class="btn btn-secondary" style="margin-top: 0.5rem;">View Changelog</button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">🌐</div>
+                        <h3>Router</h3>
+                        <p class="version">Configuration Guide</p>
+                        <div class="device-usage">Unlimited</div>
+                        <button class="btn">View Setup Guide</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings Page -->
+            <div class="page" id="account">
+                <div class="page-header">
+                    <h1>Account & Security</h1>
+                    <p>Manage your account settings and security options</p>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Profile Information</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" value="john.doe@example.com">
+                    </div>
+                    <button class="btn">Update Profile</button>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Change Password</h3>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" placeholder="Confirm new password">
+                    </div>
+                    <button class="btn">Change Password</button>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Two-Factor Authentication</h3>
+                    <div class="checkbox-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                        <label>Enable Two-Factor Authentication (2FA)</label>
+                    </div>
+                    <p style="margin-top: 1rem; color: #666;">Add an extra layer of security to your account by enabling 2FA.</p>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #e74c3c;">Danger Zone</h3>
+                    <p style="margin-bottom: 1rem; color: #666;">Once you delete your account, there is no going back. Please be certain.</p>
+                    <button class="btn btn-danger" onclick="showDeleteModal()">Delete Account</button>
+                </div>
+            </div>
+
+            <!-- Support Page -->
+            <div class="page" id="support">
+                <div class="page-header">
+                    <h1>Support Center</h1>
+                    <p>Get help and manage your support tickets</p>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Open Support Ticket</h3>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" placeholder="Brief description of your issue">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select>
+                            <option>Technical Issue</option>
+                            <option>Billing Question</option>
+                            <option>Account Access</option>
+                            <option>Feature Request</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea rows="5" placeholder="Provide detailed information about your issue..."></textarea>
+                    </div>
+                    <button class="btn">Submit Ticket</button>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Your Support Tickets</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TKT-1001</td>
+                                <td>Connection timeout issue</td>
+                                <td>Oct 25, 2025</td>
+                                <td><span class="status-badge status-open">Open</span></td>
+                                <td><button class="btn btn-small">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>#TKT-0998</td>
+                                <td>Billing inquiry</td>
+                                <td>Oct 20, 2025</td>
+                                <td><span class="status-badge status-closed">Closed</span></td>
+                                <td><button class="btn btn-small">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>#TKT-0995</td>
+                                <td>Feature request: Dark mode</td>
+                                <td>Oct 15, 2025</td>
+                                <td><span class="status-badge status-closed">Closed</span></td>
+                                <td><button class="btn btn-small">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem; color: #667eea;">Community & Resources</h3>
+                    <div class="support-links">
+                        <a href="#" class="support-link">💬 Discord</a>
+                        <a href="#" class="support-link">📱 Telegram</a>
+                        <a href="#" class="support-link">📚 Knowledge Base</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h2 style="color: #e74c3c; margin-bottom: 1rem;">⚠️ Delete Account</h2>
+            <p style="margin-bottom: 1.5rem;">Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.</p>
+            <div class="form-group">
+                <label>Type "DELETE" to confirm</label>
+                <input type="text" id="deleteConfirm" placeholder="Type DELETE">
+            </div>
+            <div class

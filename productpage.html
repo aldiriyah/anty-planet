@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrowserBot Pro - Advanced Web Automation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 100px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #a0aec0;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .browser-mockup {
+            margin: 50px auto;
+            max-width: 900px;
+            background: #2d3748;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease 0.4s both;
+            transition: transform 0.3s ease;
+        }
+
+        .browser-mockup:hover {
+            transform: translateY(-10px);
+        }
+
+        .browser-header {
+            background: #1a202c;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .browser-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #fff;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 80px 0;
+        }
+
+        .use-case-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 50px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover {
+            transform: translateX(10px);
+            border-color: #667eea;
+        }
+
+        .use-case-card h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .comparison-table {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .check {
+            color: #27c93f;
+            font-size: 20px;
+        }
+
+        .cross {
+            color: #ff5f56;
+            font-size: 20px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a0aec0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .browser-content {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">BrowserBot Pro</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Automate Any Web Task<br>In Minutes, Not Hours</h1>
+            <p>The most powerful browser automation tool for crypto trading, affiliate marketing, and web scraping</p>
+            
+            <div class="browser-mockup floating">
+                <div class="browser-header">
+                    <span class="browser-dot dot-red"></span>
+                    <span class="browser-dot dot-yellow"></span>
+                    <span class="browser-dot dot-green"></span>
+                </div>
+                <div class="browser-content">
+                    <h2>🚀 Advanced Web Automation</h2>
+                    <p>Record, replay, and scale any browser action with zero coding required</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Execute complex workflows in seconds with our optimized automation engine. 10x faster than traditional tools.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Detection</h3>
+                    <p>AI-powered element detection ensures your automations work even when websites change their layout.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Stealth Mode</h3>
+                    <p>Advanced anti-detection technology makes your bot undetectable from regular users.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track performance, success rates, and ROI with comprehensive built-in analytics dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Multi-Threading</h3>
+                    <p>Run multiple browser instances simultaneously to scale your operations exponentially.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-level encryption and secure credential storage to protect your sensitive data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases">
+        <div class="container">
+            <h2 class="section-title">Perfect For</h2>
+            
+            <div class="use-case-card">
+                <h3>💰 Crypto Trading</h3>
+                <p>Automate NFT minting, token sniping, and portfolio management across multiple DEXs. Execute trades faster than humanly possible with millisecond precision. Monitor blockchain events and automatically trigger buy/sell actions based on your custom strategies.</p>
+            </div>
+
+            <div class="use-case-card">
+                <h3>🤝 Affiliate Marketing</h3>
+                <p>Scale your affiliate campaigns by automating link posting, content distribution, and performance tracking. Monitor competitor campaigns, scrape product data, and automatically update your promotional content across multiple platforms.</p>
+            </div>
+
+            <div class="use-case-card">
+                <h3>🌐 Web Automation</h3>
+                <p>Streamline repetitive tasks like data entry, form submissions, and lead generation. Extract data from any website, automate social media management, and schedule automated workflows that run 24/7 without supervision.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="container">
+            <h2 class="section-title">Why Choose BrowserBot Pro?</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>BrowserBot Pro</th>
+                            <th>Competitor A</th>
+                            <th>Competitor B</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Multi-Threading</td>
+                            <td><span class="check">✓</span> Unlimited</td>
+                            <td><span class="check">✓</span> 5 max</td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Stealth Mode</td>
+                            <td><span class="check">✓</span> Advanced</td>
+                            <td><span class="check">✓</span> Basic</td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>AI Detection</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Real-time Analytics</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>24/7 Support</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Price/Month</td>
+                            <td><strong>$49</strong></td>
+                            <td>$79</td>
+                            <td>$99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="section-title">Ready to Automate Everything?</h2>
+            <p style="font-size: 20px; color: #a0aec0; margin-bottom: 20px;">Join 10,000+ users automating their way to success</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Download Now</a>
+                <a href="#" class="btn btn-secondary">Buy License - $49</a>
+            </div>
+            <p style="margin-top: 30px; color: #a0aec0;">✨ 30-day money-back guarantee • No credit card required for trial</p>
+        </div>
+    </section>
+
+    <!-- Product Use Cases with Images -->
+    <section class="visual-use-cases">
+        <div class="container">
+            <h2 class="section-title">See It In Action</h2>
+            <p style="text-align: center; font-size: 18px; color: #a0aec0; margin-bottom: 60px;">Real-world automation scenarios with visual demonstrations</p>
+            
+            <div class="visual-cases-grid">
+                <div class="visual-case-card">
+                    <div class="visual-case-image crypto-animation">
+                        <div class="animation-content">
+                            <div class="crypto-icon">₿</div>
+                            <div class="pulse-circle"></div>
+                            <div class="trade-lines">
+                                <div class="trade-line line-1"></div>
+                                <div class="trade-line line-2"></div>
+                                <div class="trade-line line-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-case-content">
+                        <h3>Automated Crypto Trading</h3>
+                        <p>Execute lightning-fast trades across multiple exchanges simultaneously. Our automation monitors price movements 24/7 and executes your trading strategies with millisecond precision.</p>
+                        <ul class="case-features">
+                            <li>⚡ Instant trade execution</li>
+                            <li>📊 Multi-exchange monitoring</li>
+                            <li>🎯 Custom strategy triggers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-case-card">
+                    <div class="visual-case-image affiliate-animation">
+                        <div class="animation-content">
+                            <div class="network-nodes">
+                                <div class="node node-1">🔗</div>
+                                <div class="node node-2">🔗</div>
+                                <div class="node node-3">🔗</div>
+                                <div class="node node-4">🔗</div>
+                                <div class="connection con-1"></div>
+                                <div class="connection con-2"></div>
+                                <div class="connection con-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-case-content">
+                        <h3>Affiliate Campaign Scaling</h3>
+                        <p>Manage hundreds of affiliate campaigns effortlessly. Automatically post links, track conversions, and optimize performance across all your marketing channels without manual intervention.</p>
+                        <ul class="case-features">
+                            <li>🚀 Multi-platform posting</li>
+                            <li>📈 Auto performance tracking</li>
+                            <li>🎨 Content distribution</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-case-card">
+                    <div class="visual-case-image data-animation">
+                        <div class="animation-content">
+                            <div class="data-flow">
+                                <div class="data-point dp-1">📄</div>
+                                <div class="data-point dp-2">📄</div>
+                                <div class="data-point dp-3">📄</div>
+                                <div class="data-stream"></div>
+                                <div class="database">🗄️</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-case-content">
+                        <h3>Web Data Extraction</h3>
+                        <p>Extract structured data from any website at scale. Automatically collect product information, pricing data, contact details, and more - all organized and ready for your analysis.</p>
+                        <ul class="case-features">
+                            <li>🔍 Intelligent scraping</li>
+                            <li>📊 Structured data export</li>
+                            <li>⏰ Scheduled automation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTube Tutorial Section -->
+    <section class="youtube-section">
+        <div class="container">
+            <h2 class="section-title">Watch How It Works</h2>
+            <p style="text-align: center; font-size: 18px; color: #a0aec0; margin-bottom: 50px;">Learn the basics in under 5 minutes with our quick start guide</p>
+            
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="BrowserBot Pro - Quick Start Tutorial" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Getting Started with BrowserBot Pro</h3>
+                    <p class="video-description">In this tutorial, you'll learn how to set up your first automation workflow, configure browser profiles, and deploy your automation in less than 5 minutes. Perfect for beginners!</p>
+                    <div class="video-stats">
+                        <span class="stat">👁️ 125K views</span>
+                        <span class="stat">👍 4.2K likes</span>
+                        <span class="stat">⏱️ 4:32</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="more-videos">
+                <h3 style="text-align: center; margin-bottom: 30px; font-size: 24px;">More Tutorials</h3>
+                <div class="video-grid">
+                    <div class="video-thumb" onclick="changeVideo('dQw4w9WgXcQ', 'Advanced Multi-Threading Setup')">
+                        <div class="thumb-placeholder">
+                            <span style="font-size: 48px;">⚡</span>
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <p class="thumb-title">Advanced Multi-Threading</p>
+                        <p class="thumb-duration">8:15</p>
+                    </div>
+                    <div class="video-thumb" onclick="changeVideo('dQw4w9WgXcQ', 'Stealth Mode Configuration')">
+                        <div class="thumb-placeholder">
+                            <span style="font-size: 48px;">🔒</span>
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <p class="thumb-title">Stealth Mode Setup</p>
+                        <p class="thumb-duration">6:42</p>
+                    </div>
+                    <div class="video-thumb" onclick="changeVideo('dQw4w9WgXcQ', 'Crypto Trading Automation')">
+                        <div class="thumb-placeholder">
+                            <span style="font-size: 48px;">💰</span>
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <p class="thumb-title">Crypto Trading Bot</p>
+                        <p class="thumb-duration">12:28</p>
+                    </div>
+                    <div class="video-thumb" onclick="changeVideo('dQw4w9WgXcQ', 'Web Scraping Masterclass')">
+                        <div class="thumb-placeholder">
+                            <span style="font-size: 48px;">🌐</span>
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <p class="thumb-title">Web Scraping Guide</p>
+                        <p class="thumb-duration">10:55</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section-product">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p style="text-align: center; font-size: 18px; color: #a0aec0; margin-bottom: 50px;">Everything you need to know about BrowserBot Pro</p>
+            
+            <div class="faq-container">
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>How difficult is it to set up my first automation?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        It's incredibly easy! Our intuitive interface allows you to create your first automation in under 5 minutes. Simply record your actions, customize the workflow, and deploy. No coding knowledge required. We also provide step-by-step video tutorials to guide you through the process.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>Can I use BrowserBot Pro for crypto trading?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        Absolutely! BrowserBot Pro is perfect for crypto trading automation. You can automate NFT minting, token sniping, DEX trading, and portfolio management across multiple exchanges. Our millisecond-precision execution ensures you never miss an opportunity.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>Will my automations be detected as bots?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        Our advanced stealth mode makes your automation virtually undetectable. We use sophisticated techniques including human-like mouse movements, randomized timing, fingerprint masking, and browser profile rotation. Your automations will appear as legitimate human users.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>How many browser instances can I run simultaneously?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        This depends on your plan. Starter plans support up to 3 concurrent instances, Professional plans up to 10, and Enterprise plans offer unlimited threading. The actual number you can run also depends on your computer's hardware specifications.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>What websites can I automate?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        BrowserBot Pro can automate virtually any website including e-commerce platforms, social media, crypto exchanges, data aggregators, and business applications. Our AI-powered element detection works even when websites update their layouts, ensuring long-term reliability.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>Do you offer technical support?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        Yes! All plans include email support with responses within 24 hours. Professional and Enterprise plans get priority support with faster response times. Enterprise customers also receive dedicated phone support and custom integration assistance.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>Can I try before I buy?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        Yes! We offer a 7-day free trial of our Professional plan with full access to all features. No credit card required. Plus, all paid plans come with a 30-day money-back guarantee, so you can purchase with confidence.
+                    </div>
+                </div>
+
+                <div class="faq-item-product" onclick="toggleFaqProduct(this)">
+                    <div class="faq-question-product">
+                        <span>Is my data secure?</span>
+                        <span class="faq-icon-product">▼</span>
+                    </div>
+                    <div class="faq-answer-product">
+                        Absolutely. We use bank-level encryption to protect your credentials and automation data. All sensitive information is encrypted both in transit and at rest. We never store your passwords in plain text, and you have complete control over your data with local storage options.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 BrowserBot Pro. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
